@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="../style/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../scripts/pagenation.js"></script>
+</head>
+<body>
+    <div class="panel panel-default" id="header">
+        <div class="panel-body">
+            <div id="panel1">
+                <p><img src="../img/首页_03.png" id="logo" style="width: 600px;" /></p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><span id="city">南京</span><a id="changecity">切换</a></td>
+                        </tr>
+                        <tr>
+                            <td><div id="tianqi">阴转多云，32°</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding-top: 4%;padding-left: 25%;">
+                <form action="http://www.baidu.com/baidu" target="_blank">
+                    <table bgcolor="#FFFFFF">
+                        <tr>
+                            <td>
+                                <input name=tn type=hidden value=baidu>
+                                <a href="http://www.baidu.com/"><img src="http://img.baidu.com/img/logo-80px.gif" alt="Baidu" align="bottom" border="0"></a>
+                                <input type=text name=word size=60>
+                                <input type="submit" value="百度搜索">
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
+
+            </div>
+            <br />
+            <span class="topurl" style="padding-left: 27%;">中国专利</span><span class="topurl">中国专利</span><span class="topurl">中国专利</span><span class="topurl">中国专利</span>
+            <div style="background-image: url('../img/新闻资讯列表_02.png');height:200px"></div>
+        </div>
+    </div>
+    <h1 class="title2" style="margin-left: 20%;color: #000000;width: 108px;">
+        <img src="../img/新闻资讯列表_05.png" />
+        <span>资讯中心</span>
+    </h1>
+    <div style="margin-left: 20%; position: absolute; margin-top: 10px;width:78%">
+        <ul id="all" style="margin-top: 50px;"> 
+        </ul>
+        <div class="page" style="float: right;">
+            <div id="page"> 
+            </div> 
+        </div>
+    </div>
+</body>
+<script>
+    var token = "";
+    $(function () {
+        //var data = {
+        //    "data": [
+        //        {
+        //            "id": 1,
+        //            "title": "IT公司男老板专招女员工为偷拍 女厕隐藏摄像头",
+        //            "content": "原标题：云南网瘾少年为玩游戏夺走他人手机，还要求民警加QQ再聊　　4月29日，（云南）楚雄州大姚县公安局接到报警称：自己的手机被一个骑电动车的男子抢走了。接到报警后，金碧派出所民警立即展开调查。　　在调查过程中，民警发现了一个很“反常”的现象：被抢走的手机并未关机，电话卡也一直未拔出，民警在多次拨打该号码后只是被人为挂断……　　于是民警决定通过手机短信与“劫匪”进行联系，并告知对方民警的身份，但对方面对民警的好言相劝却不为所动，竟还要求民警通过QQ添加好友再继续谈。",
+        //            "publisher": "小赵",
+        //            "image_url": "http://kexin.test/uploads/images/Informations/201805/17/2018_1526521730_UaOZw48Zwc.jpg",
+        //            "status": "已生效",
+        //            "order": 1,
+        //            "created_at": "2018-05-17",
+        //            "updated_at": "2018-05-17 09:48"
+        //        },
+        //        {
+        //            "id": 2,
+        //            "title": "啦啦啦啦啦",
+        //            "content": "啊实打实大师大师大师大师大师",
+        //            "publisher": "小刘",
+        //            "image_url": "http://kexin.test/uploads/images/Informations/201805/17/2_1526521936_wQaMihLOaz.jpg",
+        //            "status": "已生效",
+        //            "order": 2,
+        //            "created_at": "2018-05-17",
+        //            "updated_at": "2018-05-17 09:52"
+        //        },
+        //        {
+        //            "id": 3,
+        //            "title": "IT公司男老板专招女员工为偷拍 女厕隐藏摄像头",
+        //            "content": "原标题：云南网瘾少年为玩游戏夺走他人手机，还要求民警加QQ再聊　　4月29日，（云南）楚雄州大姚县公安局接到报警称：自己的手机被一个骑电动车的男子抢走了。接到报警后，金碧派出所民警立即展开调查。　　在调查过程中，民警发现了一个很“反常”的现象：被抢走的手机并未关机，电话卡也一直未拔出，民警在多次拨打该号码后只是被人为挂断……　　于是民警决定通过手机短信与“劫匪”进行联系，并告知对方民警的身份，但对方面对民警的好言相劝却不为所动，竟还要求民警通过QQ添加好友再继续谈。",
+        //            "publisher": "小赵",
+        //            "image_url": "http://kexin.test/uploads/images/Informations/201805/17/2018_1526521827_LWJyiagr5l.jpg",
+        //            "status": "已生效",
+        //            "order": 3,
+        //            "created_at": "2018-05-17",
+        //            "updated_at": "2018-05-17 09:50"
+        //        }
+        //    ],
+        //    "meta": {
+        //        "pagination": {
+        //            "total": 3,
+        //            "count": 3,
+        //            "per_page": 10,
+        //            "current_page": 1,
+        //            "total_pages": 1,
+        //            "links": null
+        //        }
+        //    }
+        //};
+        var data = [];
+        //token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vcHViMTIzLmNuL2FwaS9hdXRob3JpemF0aW9ucyIsImlhdCI6MTUyNzM0NzYyMCwiZXhwIjoxNTI3MzUxMjIwLCJuYmYiOjE1MjczNDc2MjAsImp0aSI6IktydmN1RzRFMmdEVTZjR2UiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FF-rZ9UTHcuZrm3SrNm0XwNYN5EJ3F_7qjolSPQqEow";
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/authorizations",
+            data: { email: "kexin@qq.com", password: "123456" },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                token = json.access_token;
+            }
+        }); 
+
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/informations",
+            data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                data = json;
+            }
+        }); 
+
+        $("#all").html("");//全部清空
+        var html = "";
+        for (var i = 0; i < data.data.length; i++) {
+            html += "<li><a target='_blank' href='zixundetail.html?id=" + data.data[i].id + "' >" + data.data[i].title + "</a><span style='float:right;margin-right: 10%;' >" + data.data[i].created_at + "<span></li>";//创建一页的li列表 
+        }
+        $("ul#all").html(html);//给ul列表写入html
+        var zz = getzz()
+        var pageno = data.meta.pagination.current_page//1; //当前页
+        var pagesize = data.meta.pagination.per_page; //每页多少条信息
+        var pageall = data.meta.pagination.total_pages;
+        change(1, pageall);
+    })
+   
+</script>
+</html>

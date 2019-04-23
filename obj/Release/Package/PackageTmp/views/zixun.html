@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../scripts/zTree/zTreeStyle.css" rel="stylesheet" />
+    <link href="../style/treegrid.css" rel="stylesheet" />
+    <link href="../scripts/lhgdialog/skins/mac.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.core.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.excheck.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.exedit.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../scripts/lhgdialog/lhgcore.lhgdialog.min.js"></script>
+</head>
+<body style="background-color:aliceblue">
+    <div class="panel panel-default" id="header" style="background-color:aliceblue">
+        <div class="panel-body">
+            <div id="panel1">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="name"
+                                   placeholder="请输入名字">
+                        </div>
+                    </div> 
+                    <div class="form-group" style="width: 300px;">
+                        <label for="firstname" class="col-sm-4 control-label" style="margin-top: 10px;">链接状态</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="statue">
+                                <option value="">全部</option>
+                                <option value="1">有效</option>
+                                <option value="0">无效</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-inline" style="padding-top: 20px;">
+                    <div class="form-group" style="width: 230px;  ">
+                        <div class="col-sm-12">
+                            <button class="form-control btn btn-warning" onclick="pagedata()">搜索</button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 230px; ">
+                        <div class="col-sm-12">
+                            <button class="form-control btn btn-success" onclick="reset()">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div>
+        <div class="form-inline">
+            <div class="form-group" style="width: 30%;">
+                <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">模块名称</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="modename"
+                           placeholder="请输入名字">
+                </div>
+                <button class="col-sm-3 form-control" onclick="savamode()">保存</button>
+            </div>
+            <div class="form-group" style="width: 230px; float: right;" id="importdiv">
+                <div class="col-sm-12">
+                    <button class="form-control btn btn-warning" onclick="$('#exc').click();">批量导入</button>
+                    <input type="file" onChange="importcc()" style="display: none;" id="exc">
+                </div>
+            </div>
+            <div class="form-group" style="width: 230px; float: right;" id="exportdiv">
+                <div class="col-sm-12">
+                    <button class="form-control btn btn-success" onclick="exporte()">模板下载</button>
+                </div>
+            </div>
+            <div class="form-group" style="width: 230px; float: right;" id="adddiv">
+                <div class="col-sm-12">
+                    <button class="form-control btn btn-success" onclick="addzixun()">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <div style="left: 10px; position: absolute; margin-top: 10px;width:98%">
+        <table id="table" class="table table-bordered table-hover active" cellspacing="0" cellpadding="0" style="width:100%"></table>
+    </div>
+</body>
+<script>
+    var token = "";
+    var id = "";
+    $(function () {
+        id = getQueryString("id");
+       
+        if (id == "2") {
+            $("#importdiv").hide();
+            $("#exportdiv").hide();
+        } else {
+            $("#adddiv").hide();
+        }
+
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/authorizations",
+            data: { email: "kexin@qq.com", password: "123456" },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                token = json.access_token;
+            }
+        }); 
+        var clo1 = [{
+            field: 'id',
+            title: '序号',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        }, {
+            field: 'id',
+            title: '序号'
+        }, {
+            field: 'image_url',
+            title: '图标',
+            formatter: function (value, row, index) {
+                return "<img src='" + value + "'/>";
+            }
+        }, {
+            field: 'name',
+            title: '名称'
+        }, {
+            field: 'url',
+            title: '链接'
+        }, {
+            field: 'status',
+            title: '链接状态',
+            formatter: function (value, row, index) {
+                if (value == 1) {
+                    return "有效";
+                } else {
+                    return "无效";
+                }
+            }
+
+        }, {
+            field: 'id',
+            title: '操作',
+            formatter: function (value, row, index) {
+                var str = "";
+                str += "<a href='javascript:void(0)' onclick='edit(\"" + value + "\")'>编辑</a>&nbsp;&nbsp;&nbsp;";
+                str += "<a href='javascript:void(0)' onclick='deletec(\"" + value + "\")'>删除</a>&nbsp;&nbsp;&nbsp;";
+                //if (row.status != "已生效") {
+                //    str += "<a href='javascript:void(0)' style='color: grey;' >置为无效</a>&nbsp;&nbsp;&nbsp;";
+                //} else {
+                //    str += "<a href='javascript:void(0)' onclick='statue(\"" + value + "\")'>置为无效</a>&nbsp;&nbsp;&nbsp;";
+                //}
+
+                if (row.order != 1) {
+                    str += "<a href='javascript:void(0)' onclick='changeorderup(\"" + value + "\")'>上移</a>&nbsp;&nbsp;&nbsp;";
+                }
+                if (row.order != total) {
+                    str += "<a href='javascript:void(0)' onclick='changeorderdown(\"" + value + "\")'>下移</a>&nbsp;&nbsp;&nbsp;";
+                }
+                return str;
+            }
+
+        }];
+        if (id == "2")
+        {
+            clo1 = [{
+                field: 'id',
+                title: '序号',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            }, {
+                field: 'title',
+                title: '名称'
+            }, {
+                field: 'publisher',
+                title: '发布人'
+            }, {
+                field: 'status',
+                title: '链接状态',
+                formatter: function (value, row, index) {
+                    if (row.status == 0) {
+                        return "无效";
+                    } else {
+                        return "有效";
+                    }
+                }
+            }, {
+                field: 'created_at',
+                title: '首次发布日期'
+            }, {
+                field: 'updated_at',
+                title: '最近更新时间'
+            }, {
+                field: 'id',
+                title: '操作',
+                formatter: function (value, row, index) {
+                    var str = "";
+                    str += "<a href='javascript:void(0)' onclick='editzixun(\"" + value + "\")'>编辑</a>&nbsp;&nbsp;&nbsp;";
+                    str += "<a href='javascript:void(0)' onclick='deletezixun(\"" + value + "\")'>删除</a>&nbsp;&nbsp;&nbsp;";
+                    if (row.status == 0) {
+                        str += "<a href='javascript:void(0)' style='color: grey;' >置为无效</a>&nbsp;&nbsp;&nbsp;";
+                    } else {
+                        str += "<a href='javascript:void(0)' onclick='statuezixun(\"" + value + "\")'>置为无效</a>&nbsp;&nbsp;&nbsp;";
+                    }
+
+                    if (row.order != 1) {
+                        str += "<a href='javascript:void(0)' onclick='changeorderzixunup(\"" + value + "\")'>上移</a>&nbsp;&nbsp;&nbsp;";
+                    }
+                    if (row.order != total) {
+                        str += "<a href='javascript:void(0)' onclick='changeorderzixundown(\"" + value + "\")'>下移</a>&nbsp;&nbsp;&nbsp;";
+                    }
+                    return str;
+                }
+
+            }]
+        }
+        //table
+        $('#table').bootstrapTable('destroy').bootstrapTable({
+            onPageChange: function (number, size) {
+                pageNumber = number;
+                pageSize = size;
+                pagedata();
+            },
+            //responseHandler: handler,
+            //responseHandler: function (result) {
+            //    return {
+            //        total: result.meta.pagination.total, //总页数,前面的key必须为"total"
+            //        data: result.data //行数据，前面的key要与之前设置的dataField的值一致.
+            //    };
+            //},
+            cache: false,
+            dataField: "data",
+            //data: datalist,
+            sidePagination: 'server',//指定服务器端分页
+            pagination: true,
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [10],
+            sortable: true,
+            columns: clo1
+        });
+
+        pagedata();
+    })
+    var total = 0;
+    function pagedata() {
+        var Options = $('#table').bootstrapTable('getOptions');
+        var statue = document.getElementById("statue");
+        var index = statue.selectedIndex;
+        if (id == "2") {
+            
+            $.ajax({
+                type: "GET",
+                url: "http://pub123.cn/api/informations",
+                data: { token: token, page: Options.pageNumber },
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    total = json.meta.pagination.total;
+                    json.total = json.meta.pagination.total;
+                    $('#table').bootstrapTable('load', json);
+                }
+            });
+        } else {
+           
+            $.ajax({
+                type: "GET",
+                url: "http://pub123.cn/api/websites",
+                data: {
+                    website_category_id: id,
+                    token: token,
+                    page: Options.pageNumber,
+                    name: $("#name").val(), 
+                    status: statue.options[index].value 
+                },
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    total = json.meta.pagination.total;
+                    json.total = json.meta.pagination.total;
+                    $('#table').bootstrapTable('load', json);
+                } 
+            });
+        }
+       
+    }
+    function reset() {
+        $("#name").val(""); 
+        $("#statue").val(""); 
+    }
+    function addzixun()
+    {
+        $.dialog({
+            id: 'scj',
+            title: '添加',
+            content: 'url:addzixun.html',
+            width: 1100,
+            height: 420,
+            min: false,
+            max: false,
+            lock: true
+        });
+    }
+    function editzixun(id)
+    {
+        $.dialog({
+            id: 'scj',
+            title: '编辑',
+            content: 'url:addzixun.html?id=' + id,
+            width: 1100,
+            height: 420,
+            min: false,
+            max: false,
+            lock: true
+        });
+    }
+    function deletezixun(value)
+    {
+        var msg = "您真的确定要删除吗？\n\n请确认！";
+        if (confirm(msg) == true) {
+            $.ajax({
+                type: "delete",
+                url: "http://pub123.cn/api/informations/" + value + "?token=" + token,
+                success: function (json) {
+                    alert("删除成功！");
+                    pagedata()
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    function statuezixun(value)
+    {
+        var msg = "您真的确定要置为无效吗？\n\n请确认！";
+        if (confirm(msg) == true) {
+            $.ajax({
+                type: "put",
+                url: "http://pub123.cn/api/informations/" + value + "?status=no" + "&token=" + token,
+                success: function (json) {
+                    alert("操作成功！");
+                    pagedata()
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    function edit(cid) {
+        $.dialog({
+            id: 'scj',
+            title: '编辑',
+            content: 'url:urledit.html?id=' + cid+"&flag=1&cid="+id,
+            width: 1100,
+            height: 420,
+            min: false,
+            max: false,
+            lock: true
+        });
+    }
+    function deletec(value) {
+        var msg = "您真的确定要删除吗？\n\n请确认！";
+        if (confirm(msg) == true) {
+            $.ajax({
+                type: "delete",
+                url: "http://pub123.cn/api/websites/" + value,
+                success: function (json) {
+                    alert("删除成功！");
+                    pagedata()
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    function changeorderup(value) {
+        $.ajax({
+            type: "patch",
+            url: "http://pub123.cn/api/websites/" + value + "?status=up",
+            success: function (json) {
+                alert("操作成功！");
+                pagedata()
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function changeorderdown(value) {
+        $.ajax({
+            type: "patch",
+            url: "http://pub123.cn/api/websites/" + value + "?status=down",
+            success: function (json) {
+                alert("操作成功！");
+                pagedata()
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function changeorderzixunup(value) {
+        $.ajax({
+            type: "patch",
+            url: "http://pub123.cn/api/informations/" + value + "?status=up" + "&token=" + token,
+            success: function (json) {
+                alert("操作成功！");
+                pagedata()
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function changeorderzixundown(value) {
+        $.ajax({
+            type: "patch",
+            url: "http://pub123.cn/api/informations/" + value + "?status=down" + "&token=" + token,
+            success: function (json) {
+                alert("操作成功！");
+                pagedata()
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function exporte() {
+        var url = "http://pub123.cn/api/websites/export/excel?website_category_id=" + id;
+        window.open(url);
+        //var $form = $('<form method="GET"></form>');
+        //$form.attr('action', url);
+        //$form.appendTo($('body'));
+        //$form.submit();
+    }
+    function importcc() {
+        var formFile = new FormData();
+        if (document.getElementById("exc").files.length > 0) {
+            formFile.append("file", document.getElementById("exc").files[0]); // 文件对象
+        }
+        formFile.append("website_category_id", id);
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/websites/import",
+            data: formFile,
+            //dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (json) {
+                //token = json.access_token;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function savamode() {
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/authorizations",
+            data: { email: "kexin@qq.com", password: "123456" },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                token = json.access_token;
+            }
+        });
+        $.ajax({
+            type: "put",
+            url: "http://pub123.cn/api/website_categories/" + id + "?token=" + token + "&name=" + $("#modename").val(),
+            //contentType: 'application/x-www-form-urlencoded',
+            //data: { token: token, name: $("#modename").val() },//JSON.stringify({ token: token, name: $("#modename").val() }),
+            //dataType: "json",
+            //async: false,
+            success: function (json) {
+                alert("修改成功！")
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                /*弹出jqXHR对象的信息*/
+                //alert(jqXHR.responseText);
+                //alert(jqXHR.status);
+                //alert(jqXHR.readyState);
+                //alert(jqXHR.statusText);
+                ///*弹出其他两个参数的信息*/
+                //alert(textStatus);
+                alert(errorThrown);
+            }
+        });
+    }
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return "";
+    }
+</script>
+</html>

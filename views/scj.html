@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="../style/style.css" rel="stylesheet" /> 
+    <link href="../style/bootstrap.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/cookies.js"></script>
+</head>
+<body>
+    <div id="scj" class="panel panel-default" style="margin-bottom: 0px;">
+        <div class="panel panel-default" style="margin-bottom: 0px;">
+            <div class="panel-body" style="background-color:#E8E8E8;height: 80px;" >
+                <div id="scjurls1" class="form-inline carousel slide"> 
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="panel-body">
+        <div class="form-group" style="width: 80%;margin-top: 20px;">
+            <label for="firstname" class="col-sm-3 control-label" style="text-align: right;margin-top: 5px;">名称</label>
+            <div class="col-sm-9" style="padding-left: 0px;">
+                <input type="text" class="form-control" id="name"
+                       placeholder="请输入名称">
+            </div>
+        </div>
+        <div class="form-group" style="width: 80%;margin-top: 20px;">
+            <label for="lastname" class="col-sm-3 control-label" style="margin-top: 25px;text-align: right;">链接</label>
+            <div class="col-sm-9" style="margin-top: 20px;padding-left: 0px;">
+                <input type="text" class="form-control" id="website"
+                       placeholder="请输入链接">
+            </div>
+        </div>
+        <div class="form-group" style="width: 80%;margin-top: 20px;">
+            <div class="col-sm-offset-3 col-sm-10" style="margin-top: 20px;">
+                <button type="button" class="btn btn-primary" style="margin-left: 30px;" onclick="add()">添加</button>
+                <button type="button" class="btn" style="margin-left: 160px;" onclick="OnCancel()">取消</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script> 
+    var scjdata = []
+    var token = "";
+    $(function () {
+        token = getCookie("weixintoken");
+        if (token == "") {
+            top.location.href = "https://open.weixin.qq.com/connect/qrconnect?appid=wx34cb6b6ef9fd9d18&redirect_uri=http://pub123.cn&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect";
+        } 
+        init() 
+    })
+    function init() {
+        $.ajax({
+            type: "get",
+            url: "http://api.pub123.cn/api/favorites",
+            data: {token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                scjdata = json; 
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText);
+            }
+        }); 
+        var scjnum = 0;
+        var scjmax = Math.ceil(scjdata.length / 12) - 1;
+        var scjstr = " <div class='carousel-inner'><div class='item active' >";
+        for (var i = 0; i < scjdata.length ; i++) {
+            if (i != 0 && Math.round(i % 12) == 0) {
+                scjstr += "<div class='item' >";
+            }
+            var ml = "";
+            if (Math.round(i % 6) == 0) {
+                ml = "margin-left: 20px;"
+            } else {
+                ml = "margin-left: 5px;"
+            }
+            scjstr += "<p class='form-group' id='id" + scjdata[i].id + "' style='" + ml + "width: 15%;margin-top: 5px;background-color: #ffffff;border: 0.5px solid white;'>" + 
+                                "<img src='" + scjdata[i].icon + "' style='width: 18px;' />" +
+                                "<a href='" + scjdata[i].website + "' style='display: inline;'   target='_blank'>" + scjdata[i].name + "</a>" +
+                                "<img src='../img/配置收藏夹_07.png' style='width: 20px;float: right;padding-right: 5px;' onclick='deleteff(" + scjdata[i].id + ")' />" + 
+                        "</p>";
+            if (i != 0 && Math.round(i % 12) == 11) {
+                scjstr += "</div>";
+            }
+            if (i == scjdata.length - 1) {
+                scjstr += "</div>";
+            }
+        }
+
+        scjstr += "</div><a class='left carousel-control  dy1 scjleft'  href='#myCarouselscj' role='button' data-slide='prev' style='width:30px;'>" +
+		        "<span class='glyphicon' aria-hidden='true'></span>" +
+		        "<span class='sr-only'>Previous</span>" +
+	        "</a>" +
+	        "<a class='right carousel-control dy2 scjright' href='#myCarouselscj' role='button' data-slide='next' style='width: 30px;'>" +
+		        "<span class='glyphicon' aria-hidden='true'></span>" +
+		        "<span class='sr-only'>Next</span>" +
+	        "</a>"
+        $("#scjurls1").empty();
+        $("#scjurls1").append(scjstr);
+        $("#scjurls1").carousel("pause");
+        $(".scjleft").click(function () {
+            scjnum = scjnum - 1;
+            if (scjnum < 0) {
+                scjnum = scjmax;
+            } else if (scjnum > scjmax) {
+                scjnum = 0;
+            }
+            $("#scjurls1").carousel(scjnum);
+        });
+        $(".scjright").click(function () {
+            scjnum = scjnum + 1;
+            if (scjnum < 0) {
+                scjnum = scjmax;
+            } else if (scjnum > scjmax) {
+                scjnum = 0;
+            }
+            $("#scjurls1").carousel(scjnum);
+        });
+    }
+    function deleteff(id) {
+        $.ajax({
+            type: "delete",
+            url: "http://api.pub123.cn/api/favorites/" + id + "?token=" + token,
+            success: function (json) {
+                alert("删除成功！");
+                init()
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function add()
+    {
+        if($("#name").val()==""||$("#website").val()==""){
+            alert("参数不全")
+        }else{
+            $.ajax({
+                type: "post",
+                url: "http://api.pub123.cn/api/favorites?token=" + token,
+                data: { token: token, name: $("#name").val(), website: $("#website").val() },
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    alert("添加成功！");
+                    init();
+                }
+            });
+        }
+      
+    }
+    function OnCancel() { 
+        var api = frameElement.api;
+        api.close();
+
+    }
+</script>
+</html>

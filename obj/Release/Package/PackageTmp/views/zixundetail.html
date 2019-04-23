@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="../style/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../scripts/pagenation.js"></script>
+</head>
+<body>
+    <div class="panel panel-default" id="header">
+        <div class="panel-body">
+            <div id="panel1">
+                <p><img src="../img/首页_03.png" id="logo" style="width: 600px;" /></p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><span id="city">南京</span><a id="changecity">切换</a></td>
+                        </tr>
+                        <tr>
+                            <td><div id="tianqi">阴转多云，32°</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding-top: 4%;padding-left: 25%;">
+                <form action="http://www.baidu.com/baidu" target="_blank">
+                    <table bgcolor="#FFFFFF">
+                        <tr>
+                            <td>
+                                <input name=tn type=hidden value=baidu>
+                                <a href="http://www.baidu.com/"><img src="http://img.baidu.com/img/logo-80px.gif" alt="Baidu" align="bottom" border="0"></a>
+                                <input type=text name=word size=60>
+                                <input type="submit" value="百度搜索">
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
+
+            </div>
+            <br />
+            <span class="topurl" style="padding-left: 27%;">中国专利</span><span class="topurl">中国专利</span><span class="topurl">中国专利</span><span class="topurl">中国专利</span>
+            <div style="background-image: url('../img/新闻资讯列表_02.png');height:200px"></div>
+        </div>
+    </div>
+    <h1 class="title2" style="margin-left: 20%;color: #000000;width: 108px;">
+        <img src="../img/新闻资讯列表_05.png" />
+        <span>资讯详情</span>
+    </h1> 
+    <div style="margin-left: 20%; position: absolute; margin-top: 10px;width:78%">
+         <h2 id="title22" style="margin-top: 50px;font-size: large; margin-left: 20%;"></h2>
+         <p id="detail"></p>
+    </div>
+</body>
+<script>
+    $(function () {
+        var data = {};
+        var id = getQueryString("id");
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/informations/"+id,
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                data = json;
+            }
+        });
+        $("#title22").html(data.title);
+        $("#detail").html(data.content);
+    })
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return "";
+    }
+</script>
+</html>

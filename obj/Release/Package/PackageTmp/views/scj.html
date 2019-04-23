@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="../style/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="scj" class="panel panel-default">
+        <div class="panel panel-default" style="margin-bottom: 0px;">
+            <div class="panel-body">
+                <div id="scjurls1" class="form-inline carousel slide"> 
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div id="addscj" class="panel panel-default">
+        <div class="panel panel-default" style="margin-bottom: 0px;">
+            <div class="panel-body">
+                <div class="form-group" style="width: 80%;margin-top: 20px;">
+                    <label for="firstname" class="col-sm-2 control-label">名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="firstname"
+                               placeholder="请输入名称">
+                    </div>
+                </div>
+                <div class="form-group" style="width: 80%;margin-top: 20px;">
+                    <label for="lastname" class="col-sm-2 control-label" style="margin-top: 20px;">链接</label>
+                    <div class="col-sm-10"  style="margin-top: 20px;">
+                        <input type="text" class="form-control" id="lastname"
+                               placeholder="请输入链接">
+                    </div>
+                </div>
+                <div class="form-group" style="width: 80%;margin-top: 20px;">
+                    <div class="col-sm-offset-2 col-sm-10"  style="margin-top: 20px;"> 
+                        <button type="button" class="btn btn-primary" onclick="OnSubmit()">添加</button>
+                        <button type="button" class="btn" onclick="OnCancel()">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</body>
+<script>
+    $(function () {
+        var scjdata = {
+            "id": 17,
+            "parent_id": 0,
+            "name": "广告",
+            "websites": [
+                {
+                    "id": 51,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704721_MONmlBVtnF.png",
+                    "area_id": 3164,
+                    "order": 1,
+                    "status": "有效"
+                },
+                {
+                    "id": 52,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704721_FZHuzyxvFR.png",
+                    "area_id": 3164,
+                    "order": 2,
+                    "status": "有效"
+                },
+                {
+                    "id": 53,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704722_YffR7fib3C.png",
+                    "area_id": 3164,
+                    "order": 3,
+                    "status": "有效"
+                },
+                {
+                    "id": 54,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_vhTRkmKnTc.png",
+                    "area_id": 3164,
+                    "order": 4,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                },
+                {
+                    "id": 55,
+                    "name": "腾讯",
+                    "website_category_id": 17,
+                    "url": "www.qq.com",
+                    "image_url": "http://kexin.test/uploads/images/websites/201805/19/2018_1526704723_v8LcoR99eT.png",
+                    "area_id": 3164,
+                    "order": 5,
+                    "status": "有效"
+                }
+            ]
+        };
+
+        var scjnum = 0;
+        var scjmax = Math.ceil(scjdata.websites.length / 12) - 1;
+        var scjstr = " <div class='carousel-inner'><div class='item active'>";
+        for (var i = 0; i < scjdata.websites.length ; i++) {
+            if (i != 0 && Math.round(i % 12) == 0) {
+                scjstr += "<div class='item'>";
+            }
+            scjstr += "<p class='form-group'>" +
+                            "<img src='" + scjdata.websites[i].image_url + "' style='width: 32px;' />" +
+                            "<a href='" + scjdata.websites[i].url + "'>" + scjdata.websites[i].name + "</a>" +
+                        "</p>";
+            if (i != 0 && Math.round(i % 12) == 11) {
+                scjstr += "</div>";
+            }
+            if (i == scjdata.websites.length - 1) {
+                scjstr += "</div>";
+            }
+        }
+
+        scjstr += "</div><a class='left carousel-control scjleft'  href='#myCarouselscj' role='button' data-slide='prev' style='width:30px;'>" +
+		        "<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>" +
+		        "<span class='sr-only'>Previous</span>" +
+	        "</a>" +
+	        "<a class='right carousel-control scjright' href='#myCarouselscj' role='button' data-slide='next' style='width: 30px;'>" +
+		        "<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>" +
+		        "<span class='sr-only'>Next</span>" +
+	        "</a>"
+        $("#scjurls1").append(scjstr);
+        $("#scjurls1").carousel("pause");
+        $(".scjleft").click(function () {
+            scjnum = scjnum - 1;
+            if (scjnum < 0) {
+                scjnum = scjmax;
+            } else if (scjnum > scjmax) {
+                scjnum = 0;
+            }
+            $("#scjurls1").carousel(scjnum);
+        });
+        $(".scjright").click(function () {
+            scjnum = scjnum + 1;
+            if (scjnum < 0) {
+                scjnum = scjmax;
+            } else if (scjnum > scjmax) {
+                scjnum = 0;
+            }
+            $("#scjurls1").carousel(scjnum);
+        });
+
+    })
+
+    function OnCancel() {
+
+        var api = frameElement.api;
+        api.close();
+
+    }
+</script>
+</html>

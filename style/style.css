@@ -1,0 +1,220 @@
+﻿body {
+}
+#logo {
+    margin-left: 25%;
+    float: left;
+    /*width: 20%;
+    background-image: url('../img/首页_03.png');*/
+}
+.panel {
+    /*margin-bottom: 10px!important;*/
+    /*margin-top: -5px!important;*/
+}
+#changecity {
+    /*padding-left: 3%;*/
+}
+.topurl {
+     padding-left: 3%;
+     padding-top:5px;
+}
+#left {
+      position: relative;
+    padding-left: 6%;
+    float: left;
+    width: 30%;
+}
+#right {
+       position: relative;
+    width: 64%;
+    float: left;
+    /* margin-left: 40%; */
+    /*left: 35%;*/
+}
+#right11 {
+        position: fixed;
+    z-index: 200; 
+    float: right;
+    /*margin-right:7%;*/
+    bottom: 10px;
+        right: 0.1%;
+        width: 6%;
+    /*margin-left: 604px;*/
+}
+#xzqh { 
+}
+.title {
+    /*background: #FF0000;*/
+    width: 158px;
+    height:  27px;
+    line-height: 34px;
+    color: #FFF;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 700;
+    margin-left: 40%;
+    /*margin-top: 5px;*/
+}
+.title1 {  
+    width: 128px;
+    height: 22px;
+    line-height: 26px;
+    color: #FFF;
+    font-size: 12px;
+    text-align: center;
+    /*font-weight: 700;*/ 
+    margin-top: 5px;
+
+}
+.title2 {  
+    width: 78px;
+    /*height: 34px;
+    line-height: 34px;*/
+    color: #0026ff;
+    font-size: 14px;
+    /*text-align: center;*/
+    margin-left:5px;
+    font-weight: 700; 
+    margin-top: 10px;
+    float:left;
+
+}
+.title3 {
+    /*background: #FF0000;*/
+    width: 60%;
+    height: 34px;
+    line-height: 34px;
+    color: #FFF;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 700;
+    margin-left: 20%;
+    margin-top: 0px;
+}
+.form-group{  
+width: 18%;
+}
+.group3{
+width: 19%;
+}
+/*.carousel-control.left.dyleft {
+    background-image: url('../img/bb.jpg');
+}
+.carousel-control.right.dyright{ 
+    background-image: url('../img/bb.png');
+}
+.carousel-control.left.sdyleft {
+    background-image: url('../img/bb.jpg'); 
+}
+.carousel-control.right.sdyright{ 
+    background-image: url('../img/bb.png');
+}
+.carousel-control.left.shidyleft {
+    background-image: url('../img/bb.jpg'); 
+}
+.carousel-control.right.shidyright{ 
+    background-image: url('../img/bb.png');
+}
+.carousel-control.left.xdyleft {
+    background-image: url('../img/bb.jpg'); 
+}
+.carousel-control.right.xdyright{ 
+    background-image: url('../img/bb.png');
+}
+.carousel-control.left.gjleft {
+    background-image: url('../img/bb.jpg'); 
+}
+.carousel-control.right.gjright{ 
+    background-image: url('../img/bb.png');
+}
+.carousel-control.left.scjleft {
+    background-image: url('../img/bb.jpg'); 
+}
+.carousel-control.right.scjright{ 
+    background-image: url('../img/bb.png');
+}*/
+.leftform {
+    width: 40%;
+    float: left;
+}
+a {
+    cursor:pointer;
+     font-size:14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+    margin:2px;
+    color:#666666;
+    /*text-align:center*/
+}
+#sou {
+    border: 1px solid #b6b6b6;
+    border-color: #7b7b7b #b6b6b6 #b6b6b6 #7b7b7b;
+    background: #fff;
+    display: inline-block;
+    vertical-align: top;
+    width: 539px;
+    margin-right: 0;
+    border-right-width: 0;
+    border-color: #b8b8b8 transparent #ccc #b8b8b8;
+    overflow: hidden; 
+}
+img {
+float: left;
+}
+.dyl {
+    /*background-image: url('../img/首页_37.png');*/ 
+    opacity: .5;
+        background-repeat: no-repeat;
+    background-position-y: 45%;
+    background-size: 100%;
+}
+.dyr {
+    /*background-image: url('../img/首页_39.png');*/ 
+    opacity: .5;
+        background-repeat: no-repeat;
+    background-position-y: 45%;
+    background-size: 100%;
+}
+/*.dy1:hover
+{  
+    width: 20px;      
+    height: 20px;      
+    background-color:gray;   
+     border-style:solid;  
+    border-radius: 50%;      
+    -moz-border-radius: 50%;      
+    -webkit-border-radius: 50%;
+     border-radius: 0 50px 50px 0;  
+     opacity:.5
+}
+.dy1 
+{  
+    color: #968d8d;
+    opacity: .5;
+}
+*/
+.dy1:hover {
+    background-image: url('../img/左边包圆阴影2.png');
+    background-repeat: no-repeat;
+    background-size: 100% 80%;
+}
+.dy1 {
+    background-image: url('../img/左边包圆2.png');
+    background-repeat: no-repeat;
+    background-size: 100% 80%;
+}
+.dy2:hover {
+    /*background-image: url('../img/r2.png');*/ 
+    background-image: url('../img/右边包圆阴影2.png');
+    background-repeat: no-repeat;
+    background-size: 100% 80%;
+}
+.dy2 { 
+    background-image: url('../img/右边包圆2.png');
+    background-repeat: no-repeat;
+    background-size: 100% 80%;
+}
+.table td {
+overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}

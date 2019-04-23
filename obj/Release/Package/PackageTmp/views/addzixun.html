@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../scripts/zTree/zTreeStyle.css" rel="stylesheet" />
+    <link href="../style/treegrid.css" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.core.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.excheck.min.js"></script>
+    <script src="../scripts/zTree/jquery.ztree.exedit.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../scripts/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../scripts/kindeditor/kindeditor-all-min.js"></script>
+</head>
+<body style="background-color:aliceblue">
+    <!--<div class="panel panel-default" id="header" style="background-color:aliceblue">
+        <div class="panel-body">
+            <div id="panel1">
+                <h1>新增/编辑</h1>
+            </div>
+
+        </div>
+    </div>-->
+    <div class="form-group">
+        <label for="firstname" class="col-sm-1 control-label">资讯标题</label>
+        <div class="col-sm-11">
+            <input type="text" class="form-control col-sm-11" id="firstname"
+                   placeholder="请输入标题">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="firstname" class="col-sm-1 control-label" style="padding-top: 20px;">资讯详情</label>
+        <div class="col-sm-11" style="padding-top: 20px;">
+            <textarea id="txt_missionContent" name="txt_missionContent" placeholder="添加资讯详情" ></textarea>
+        </div>
+    </div>
+    <div class="form-group" style="margin-top:10px">
+        <label for="firstname" class="col-sm-1 control-label" style="margin-top:10px">图片</label>
+        <img type="file" id="oldimg" style="width:50px;float:left"  />
+        <input type="file"  id="img" style="margin-top:10px"/>
+    </div>
+    <div>
+        <button class="btn btn-warning " style="margin-left: 45%;margin-top: 20px;" onclick="action()">保存</button>
+    </div>
+</body>
+<script>
+    var id = "";
+    $(function () {
+        KindEditor.ready(function (K) {
+            editor = K.create('#txt_missionContent', {
+                width: "100%", 
+                height: 300,
+                afterCreate: function () {
+                    this.loadPlugin('autoheight');
+                },
+                afterBlur: function () { this.sync(); }
+            });
+        });
+        var data = {}
+        id = getQueryString("id");
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/informations/" + id,
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                data = json;
+            }
+        });
+        if (data.title != undefined)
+        {
+            $("#firstname").val(data.title);
+            $("#txt_missionContent").html(data.content);
+            $("#oldimg").attr("src", data.image_url);
+        }
+        
+    })
+    function action()
+    {
+        var url = "";
+        if (id != "") {
+            url = "/" + id;
+        }
+        var formFile = new FormData();
+        if (document.getElementById("img").files.length > 0) {
+            formFile.append("image_url", document.getElementById("img").files[0]); // 文件对象
+        }
+        formFile.append("title", $("#firstname").val());
+        formFile.append("content", $("#txt_missionContent").val());
+        formFile.append("publisher", "");
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/informations" + url,
+            data: formFile,
+            //dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (json) {
+                //token = json.access_token;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return "";
+    }
+</script>
+</html>

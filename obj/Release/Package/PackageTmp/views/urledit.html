@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="../style/style.css" rel="stylesheet" /> 
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="form-inline" style="margin-top:10px;">
+        <div class="form-group" style="width: 310px;margin-left: 20%;">
+            <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">名称</label>
+            <input type="text" class="form-control" id="name"
+                   placeholder="请输入名字">
+        </div> 
+        <div class="form-group" style="width: 310px;">
+            <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">图标</label>
+            <img id="img" style="width:50px" />           
+        </div>        
+    </div> 
+    <div class="form-inline" style="margin-top:10px;">
+        <div class="form-group" style="width: 310px;margin-left: 20%;">
+            <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">链接</label>
+            <input type="text" class="form-control" id="url"
+                   placeholder="请输入链接">
+        </div> 
+        <div class="form-group" style="width: 310px;" id="xzqh">
+            <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">区域属性</label>
+            <div class="form-inline" style="width:485px">
+                <div style="width:165px;float:left">
+                    <p style="width: 25px;float: left;">省</p>
+                    <select class="form-control" id="Province" onchange="provincechange()" style="height:20px;padding:0px;">
+                        <option value="">==请选择===</option>
+                    </select>
+                </div>
+                <div style="width:160px;float:left">
+                    <p style="width: 25px;float: left;">市</p>
+                    <select class="form-control" id="City" onchange="Citychange()" style="height:20px;padding:0px;">
+                        <option value="">==请选择===</option>
+                    </select>
+                </div>
+                <div style="width:160px;float:left">
+                    <p style="width: 25px;float: left;">区</p>
+                    <select class="form-control" id="Village" onchange="Villagechange()" style="height:20px;padding:0px;">
+                        <option value="">==请选择===</option>
+                    </select>
+                </div>
+            </div>
+    </div> 
+     
+    <div class="form-inline" style="margin-top:10px;">
+        <div class="form-group" style="width: 410px;margin-left: 20%;">
+            <label for="firstname" class="col-sm-3 control-label" style="margin-top: 10px;">新图标</label>
+            <input type="file" id="newimg"
+                   placeholder="请输入链接">
+        </div> 
+    </div> 
+    <div class="form-inline" style="width: 100%;">
+        <button class="form-control btn-success" style="margin-left:40%;margin-top:20px" onclick="save()">保存</button>
+    </div> 
+</body>
+<script>
+    var cid = "";
+    var flag;
+    var id = "";
+    $(function () {
+        var data = {};
+        id = getQueryString("id");
+        flag = getQueryString("flag");
+        cid = getQueryString("cid");
+        if (flag == "1")
+        {
+            $("#xzqh").hide();
+        }
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/websites/" + id,
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                //data = json; 
+                $("#name").val(json.name);
+                $("#img").attr("src",json.image_url);
+                $("#url").val(json.url); 
+                $("#area_id").val(json.area_id);
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/areas/first/1?include=children",
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                var children = json.children.data;
+                $("#Province").empty();
+                var cstr = "<option value=''>==请选择===</option>";
+                for (var i = 0 ; i < children.length; i++) {
+                    cstr += "<option value='" + children[i].id + "'>" + children[i].name + "</option>";
+                }
+                $("#Province").append(cstr);
+            }
+        });
+    })
+    function save()
+    {
+        var area_id = $("#Village").val();
+        if (area_id == "") {
+            area_id = $("#City").val();
+        }
+        if (area_id == "") {
+            area_id = $("#Province").val();
+        }
+        if (flag == "1") {
+            area_id = "0";
+        }
+        if (area_id == "") {
+            alert("请选择区域属性");
+            return;
+        }
+        var formFile = new FormData();
+        formFile.append("website_category_id", cid);  
+        if (document.getElementById("newimg").files.length > 0) {
+            formFile.append("image_url", document.getElementById("newimg").files[0]); // 文件对象
+        } else {
+            alert("请选择上传图片");
+            return;
+        }
+        formFile.append("area_id", area_id);
+        formFile.append("url", $("#url").val());
+        formFile.append("name", $("#name").val());
+        $.ajax({
+            type: "post",
+            url: "http://pub123.cn/api/websites/" + id,
+            data: formFile,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            success: function (json) {
+                //token = json.access_token;
+            },
+            error: function (jqXHR, textStatus, errorThrown) { 
+                alert(errorThrown);
+            }
+        });
+        
+    }
+    function provincechange() {
+        var e = document.getElementById("Province");
+        var value = e.selectedOptions[0].value;
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/areas/second/" + value + "?include=children",
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                var children = json.children.data;
+                $("#City").empty();
+                var cstr = "<option value=''>==请选择===</option>";
+                for (var i = 0 ; i < children.length; i++) {
+                    cstr += "<option value='" + children[i].id + "'>" + children[i].name + "</option>";
+                }
+                $("#City").append(cstr);
+            }
+        });
+    }
+    function Citychange() {
+        var e = document.getElementById("City");
+        var value = e.selectedOptions[0].value;
+        $.ajax({
+            type: "GET",
+            url: "http://pub123.cn/api/areas/three/" + value + "?include=children",
+            //data: { token: token },
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                var children = json.children.data;
+                $("#Village").empty();
+                var cstr = "<option value=''>==请选择===</option>";
+                for (var i = 0 ; i < children.length; i++) {
+                    cstr += "<option value='" + children[i].id + "'>" + children[i].name + "</option>";
+                }
+                $("#Village").append(cstr);
+            }
+        });
+    }
+    
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return "";
+    }
+</script>
+</html>
